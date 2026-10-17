@@ -5,7 +5,7 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: https://www.googletagmanager.com https://www.clarity.ms https://*.clarity.ms https://cdn.counter.dev; connect-src 'self' blob: data: https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.clarity.ms https://*.counter.dev; img-src 'self' data: blob: https:; media-src 'self' blob: data:; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; manifest-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: https://www.googletagmanager.com https://www.clarity.ms https://*.clarity.ms https://cdn.counter.dev; connect-src 'self' blob: data: https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://*.clarity.ms https://*.counter.dev https://c.bing.com; img-src 'self' data: blob: https:; media-src 'self' blob: data:; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; manifest-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"
     X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
