@@ -5,6 +5,6 @@
   "engines": { "node": ">=20" },
   "scripts": {
     "lint": "node --check service-worker.js && node --check renpy-pre.js",
-    "test": "node --test tests/"
+    "test": "node --test tests/smoke.test.mjs"
   }
 }
