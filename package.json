@@ -1,0 +1,10 @@
+{
+  "name": "rc-lembredemin",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "lint": "node --check service-worker.js && node --check renpy-pre.js",
+    "test": "node --test tests/"
+  }
+}

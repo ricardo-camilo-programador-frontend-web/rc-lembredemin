@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
 
 jobs:
   validate:
@@ -15,6 +15,15 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check repository
         run: echo "Repository checkout OK - $(ls | head -5)"
+
+  test:
+    name: Lint & Smoke tests
+    runs-on: self-hosted
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint & test
+        run: node --version && npm run lint && npm test
 
   sonar:
     name: Analise SonarQube
