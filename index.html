@@ -1,10 +1,23 @@
 <!doctype html>
-<html lang="en-us">
+<html lang="pt-BR">
 
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>LembreDeMin</title>
+  <meta name="description" content="LembreDeMin: visual novel interativa sobre escolhas morais e o espelho da alma. Jogue direto no navegador, sem instalar nada.">
+  <link rel="canonical" href="https://lembredemin.netlify.app/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="LembreDeMin — Visual Novel Interativa">
+  <meta property="og:description" content="Visual novel interativa sobre escolhas morais e o espelho da alma. Jogue no navegador.">
+  <meta property="og:url" content="https://lembredemin.netlify.app/">
+  <meta property="og:image" content="https://lembredemin.netlify.app/web-presplash.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" as="image" href="web-presplash.jpg" fetchpriority="high">
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  <link rel="preconnect" href="https://www.clarity.ms">
+  <link rel="preconnect" href="https://cdn.counter.dev">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="manifest" href="manifest.json" crossorigin="use-credentials" />
   <link rel="icon" href="icons/icon-72x72.png" sizes="72x72" type="image/png" />
@@ -190,7 +203,7 @@
   <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
   <div id="overlayDiv"></div>
 
-  <img id="presplash" src="web-presplash.jpg">
+  <img id="presplash" src="web-presplash.jpg" alt="LembreDeMin" width="1420" height="857" fetchpriority="high" decoding="async">
 
   <div id="ContextContainer">
     <a id="ContextButton">&#8801;</a><br />
@@ -232,7 +245,7 @@
   </script>
   <script src="renpy-pre.js"></script>
   <script async type="text/javascript" src="renpy.js"></script>
-  <script src="https://cdn.counter.dev/script.js" data-id="f30df6f3-776d-4154-959d-0210ac8a8325" data-utcoffset="-3"></script>
+  <script defer src="https://cdn.counter.dev/script.js" data-id="f30df6f3-776d-4154-959d-0210ac8a8325" data-utcoffset="-3"></script>
 </body>
 
 </html>
