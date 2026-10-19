@@ -2,23 +2,38 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
 
 jobs:
   validate:
     name: Validate Repository
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - name: Check repository
         run: echo "Repository checkout OK - $(ls | head -5)"
 
+  test:
+    name: Lint & Smoke tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Lint & test
+        run: node --version && npm run lint && npm test
+
   sonar:
     name: Analise SonarQube
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
+    # O SonarQube usado é local (localhost:9000 + /opt/sonar-scanner no runner self-hosted).
+    # Em runner hospedado só roda se a variável SONAR_HOST_URL (servidor acessível) estiver definida.
+    if: ${{ vars.SONAR_HOST_URL != '' }}
     steps:
       - uses: actions/checkout@v4
 
