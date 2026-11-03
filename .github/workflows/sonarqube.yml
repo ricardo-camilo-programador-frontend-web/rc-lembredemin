@@ -1,0 +1,102 @@
+name: SonarQube
+
+concurrency:
+  group: ${{ github.repository }}-sonarqube
+  cancel-in-progress: false
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonarqube:
+    name: SonarQube Analysis
+    runs-on: self-hosted
+    permissions:
+      contents: read
+      pull-requests: write
+    continue-on-error: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: |
+          if [ -f package.json ]; then
+            if [ -f pnpm-lock.yaml ]; then
+              npm install -g pnpm && pnpm install --frozen-lockfile
+            elif [ -f package-lock.json ]; then
+              npm ci
+            else
+              npm install
+            fi
+          fi
+
+      - name: Run tests with coverage
+        run: |
+          if [ -f package.json ]; then
+            npm run test:coverage || true
+          fi
+        continue-on-error: true
+
+      - name: SonarQube Scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: |
+          if [ -z "$SONAR_TOKEN" ] || [ -z "$SONAR_HOST_URL" ]; then
+            echo "::warning::SONAR_TOKEN and SONAR_HOST_URL secrets are not configured. Skipping SonarQube analysis."
+            echo "SONAR_SKIPPED=true" >> $GITHUB_ENV
+            exit 0
+          fi
+
+          echo "Testing SonarQube connectivity..."
+          if ! curl -s "$SONAR_HOST_URL/api/system/status" >/dev/null 2>&1; then
+            echo "::warning::SonarQube server at $SONAR_HOST_URL is not reachable. Skipping analysis."
+            echo "SONAR_SKIPPED=true" >> $GITHUB_ENV
+            exit 0
+          fi
+
+          echo "Running SonarQube scan..."
+          sonar-scanner \
+            -Dsonar.token="$SONAR_TOKEN" \
+            -Dsonar.host.url="$SONAR_HOST_URL" \
+            -Dsonar.projectKey="${{ github.repository }}" \
+            -Dsonar.projectName="${{ github.event.repository.name }}" \
+            -Dsonar.projectVersion="${{ github.sha }}" \
+            || {
+              echo "::warning::SonarQube scan failed. See logs above."
+              exit 0
+            }
+
+          echo "SONAR_DASHBOARD_URL=$SONAR_HOST_URL/dashboard?id=${{ github.repository }}" >> $GITHUB_ENV
+          echo "SONAR_SKIPPED=false" >> $GITHUB_ENV
+
+      - name: Comment PR with SonarQube Dashboard Link
+        if: github.event_name == 'pull_request' && env.SONAR_SKIPPED == 'false'
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          edit-mode: replace
+          body: |
+            <!-- sonarqube-analysis -->
+            ## 📊 SonarQube Analysis
+
+            **🔗 [Abrir dashboard](${{ env.SONAR_DASHBOARD_URL }})**
+
+            **Projeto:** `${{ github.repository }}`
+            **Branch:** `${{ github.head_ref }}`
+            **Commit:** `${{ github.sha }}`
+
+            ---
+            _Executado via GitHub Actions_
